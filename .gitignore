@@ -30,3 +30,13 @@
 
 # Debug files
 *.dSYM/
+
+# Others
+pdf/
+bin/
+.vscode/
+doc/ignore/
+
+deps/
+*.curr
+tags
