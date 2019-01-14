@@ -40,12 +40,7 @@ void tui_output(char const* message, char const* fallback, ...) {
 /* Mostra o conteúdo de um menu. */
 void show_menu(const struct item *menu) {
    for (int i = 0; menu[i].text != NULL; i++)
-#ifdef _POSIX_C_SOURCE
-      if (isatty(fileno(stdout)))
-         printf("\x1b[97m%2d > %s\x1b[0m\n", i+1, menu[i].text);
-      else
-#endif
-         printf("%2d > %s\n", i+1, menu[i].text);
+      tui_output("\x1b[97m%2d > %s\x1b[0m\n", "%2d > %s\n", i+1, menu[i].text);
 }
 
 /* Apresenta um título formatado especificamente para menus. */
@@ -55,12 +50,7 @@ void title_menu(const char* title) {
 
 /* Apresenta um título formatado especificamente para métodos interactivos. */
 void tui_title(const char* title) {
-   #ifdef _POSIX_C_SOURCE
-      if (isatty(fileno(stdout)))
-         printf("\n\x1b[30;102m %s \x1b[0m\n", title);
-      else
-   #endif
-         printf("\n %s \n", title);
+   tui_output("\n\x1b[30;102m %s \x1b[0m\n", "\n %s \n", title);
 }
 
 /* Calcula quantos items tem um dado menu. */
@@ -74,12 +64,7 @@ int size_menu(const struct item *menu) {
    e dispara a função associada.
    TO-DO: permitir definir caracteres para cada opção. */
 void exec_menu(struct world *w, const struct item *menu, int *opt, const char *prompt) {
-   #ifdef _POSIX_C_SOURCE
-      if (isatty(fileno(stdout)))
-         printf("\x1b[97;100m%s\x1b[0m ", prompt);
-      else
-   #endif
-         printf("%s ", prompt);
+   tui_output("\x1b[97;100m%s\x1b[0m ", "%s ", prompt);
    scanf("%d", opt);
    clear_buffer(stdin);       // Menu é apresentado indexado a 1
    (*opt)--;               // Opção deve ser convertida para zero-based
@@ -122,7 +107,7 @@ void tui_writeln_alert(const char* fmt, ...) {
    va_end(args);
 }
 
-// Normal (branco)
+// Branco
 void tui_writeb(const char* fmt, ...) {
    va_list args;
    va_start(args, fmt);
@@ -130,6 +115,7 @@ void tui_writeb(const char* fmt, ...) {
    va_end(args);
 }
 
+// Normal
 void tui_write(char const* fmt, ...) {
    va_list args;
    va_start(args, fmt);
